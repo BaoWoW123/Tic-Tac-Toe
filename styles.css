@@ -1,0 +1,43 @@
+* {
+}
+
+body {
+    display: grid;
+    flex-direction: column;
+    justify-content:space-evenly;
+    background-color: gray;
+    color: white;
+    font-size: x-large;
+    margin: 0px;
+    height: 100vh;
+}
+
+.head {
+    text-align: center;
+    align-self: center;
+    font-size: xxx-large;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    width: 500px;
+    height: 500px;
+    margin: auto;
+    gap: 20px;
+    background-color: black;
+    
+}
+.cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: lightblue;
+    color: black;
+    font-size: xxx-large;
+}
+
+.footer {
+    margin-top:auto;
+    text-align: center;
+}
