@@ -5,7 +5,7 @@ body {
     display: grid;
     flex-direction: column;
     justify-content:space-evenly;
-    background-color: gray;
+    background-color: black;
     color: white;
     font-size: x-large;
     margin: 0px;
@@ -25,14 +25,16 @@ body {
     height: 500px;
     margin: auto;
     gap: 20px;
-    background-color: black;
+    background: radial-gradient(white, black);
     
 }
 .cell {
     display: flex;
+    height: 150px;
     justify-content: center;
     align-items: center;
-    background-color: lightblue;
+    background-color: white;
+    opacity: .8;
     color: black;
     font-size: xxx-large;
 }
