@@ -3,15 +3,15 @@ let grid = document.querySelectorAll('.cell');
 
 let gameboard = (() => {
     let boardArray = [null,null,null,null,null,null,null,null,null];
-
+    
     grid.forEach(cell => {
-        //checks if cell spot is valid for placement
         cell.addEventListener('click', () => {
             if (cell.textContent === '' && boardArray[cell.dataset.id] == null) {
                 boardArray.splice(cell.dataset.id, 1 , currentPlayer.symbol)
             displayArray();
             checkGame();
             switchPlayer();
+            displayTurn()
             }
             else console.log("can't click here")
         })
@@ -19,68 +19,103 @@ let gameboard = (() => {
 
     function displayArray() {
         for (i = 0; i < 9; i++) {
-            //replace with player object 
             grid[i].textContent = boardArray[i];
         } 
     }
     
-    function checkGame() {
-        console.log(boardArray)
+    let checkGame = () => {
         let count = 0;
+        let sym = currentPlayer.symbol
+        let message = document.querySelector('.message')
+
         boardArray.forEach(cell => {
             if (cell !== null){
                 count += 1;
             }
         })
-        if (count === 9) return endGame();
-        //replace winning patterns with player.symbol
-        else if ((boardArray[0]==='X' && boardArray[1]==='X' && boardArray[2]==='X') ||
-                (boardArray[3]==='X' && boardArray[4]==='X' && boardArray[5]==='X') ||
-                (boardArray[6]==='X' && boardArray[7]==='X' && boardArray[8]==='X') ||
-                (boardArray[0]==='X' && boardArray[3]==='X' && boardArray[6]==='X') ||
-                (boardArray[1]==='X' && boardArray[4]==='X' && boardArray[7]==='X') ||
-                (boardArray[2]==='X' && boardArray[5]==='X' && boardArray[8]==='X') ||
-                (boardArray[0]==='X' && boardArray[4]==='X' && boardArray[8]==='X') ||
-                (boardArray[2]==='X' && boardArray[4]==='X' && boardArray[6]==='X')) {
-            console.log('someone Won');
-            return endGame();
+
+        function endGame() { 
+            console.log('ending')
+            
+            boardArray = [null,null,null,null,null,null,null,null,null];
+            if (count === 9) return message.textContent ='Tie Game!';
+        }
+
+        if ((boardArray[0]=== sym && boardArray[1]=== sym && boardArray[2]=== sym) ||
+            (boardArray[3]=== sym && boardArray[4]=== sym && boardArray[5]=== sym) ||
+            (boardArray[6]=== sym && boardArray[7]=== sym && boardArray[8]=== sym) ||
+            (boardArray[0]=== sym && boardArray[3]=== sym && boardArray[6]=== sym) ||
+            (boardArray[1]=== sym && boardArray[4]=== sym && boardArray[7]=== sym) ||
+            (boardArray[2]=== sym && boardArray[5]=== sym && boardArray[8]=== sym) ||
+            (boardArray[0]=== sym && boardArray[4]=== sym && boardArray[8]=== sym) ||
+            (boardArray[2]=== sym && boardArray[4]=== sym && boardArray[6]=== sym)) {
+                message.textContent= `${currentPlayer.playerNum} won!`;
+                for (i = 0;i< boardArray.length; i++) {
+                    if (boardArray[i] == null) {
+                        boardArray[i] = '';
+                    }
+                } 
+        }
+        else if (count === 9) endGame();
+        
+        let resetBtn = document.querySelector('.resetBtn')
+        resetBtn.onclick = (reset) => {
+            console.log('resset')
+            count = 0;
+            endGame();
+            grid.forEach(cell => cell.textContent ='');
+            message.textContent =''
         }
     }
-    
-    function endGame() {
-        console.log('end');
-        grid.forEach(cell => cell.textContent ='');
-        boardArray = [null,null,null,null,null,null,null,null,null];
+
+    let playerBtn = document.querySelector('.playerBtn');
+        playerBtn.addEventListener('click', changeType);
+        
+    function changeType() {
+        let symbolCount = 0
+        for (i = 0; i < boardArray.length; i++){
+            console.log(symbolCount)
+            if (boardArray[i] != null){
+             symbolCount +=1;
+            }
+        }
+        if (symbolCount >= 1) {
+            return alert("You can't switch during a game")
+        }
+        let btn = event.currentTarget;
+        if (btn.dataset.id === 'X') {
+            btn.textContent = "Player 1: O";
+            btn.dataset.id = 'O';
+            player1 = player('Player 1', 'O', 'red');
+            player2 = player('Player 2', 'X', 'blue')
+            currentPlayer = player1;
+        }
+        else {
+            btn.dataset.id = 'X';
+            btn.textContent ='Player 1: X'; 
+            player1 = player('Player 1', 'X', 'blue');
+            player2 = player('Player 2', 'O', 'red');
+            currentPlayer = player1;
+        }
+        displayTurn();
     }
-    
 })()
 
-function player(symbol, color) {
-    return {color, symbol}
+let player = (playerNum, symbol, color) => {
+    return {playerNum, symbol, color}
 }    
-    let player1 = player('X', 'blue');
-    let player2 = player('O', 'red');
-    let currentPlayer = player1;
 
-function switchPlayer() {
+let player1 = player('Player 1', 'X', 'blue');
+let player2 = player('Player 2', 'O', 'red');
+let currentPlayer = player1;
+
+let switchPlayer = () => {
     (currentPlayer == player1) ?
      currentPlayer = player2: 
      currentPlayer = player1;
 }
 
-console.log(player1.color)
-console.log(gameboard)
-/* 
-create click event listener 
-    -runs function to place this.object(x, o) at given cell 
-    -store object into array
-
-create function to display array onto html
-
-create object constructor to 
-
-Function to check if someone won by checking array
-    -Bunch of if else statements to see if three in a row
-    - if array full & no 3 in a row, return tie, 
-    display array onto gameboard with for dom qs all then foreach 
- */
+let displayTurn = () => {
+    let turn = document.querySelector('.turn');
+    turn.textContent = `${currentPlayer.playerNum}'s Turn`;
+}
